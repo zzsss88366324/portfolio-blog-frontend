@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { projectsAPI, blogAPI } from '../utils/api';
+import { projectsAPI, blogAPI, contactAPI } from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import './Admin.css';
 
@@ -28,12 +28,16 @@ const Admin = () => {
   });
   const [editingBlog, setEditingBlog] = useState(null);
 
+  // Messages state
+  const [messages, setMessages] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
     fetchProjects();
     fetchBlogs();
+    fetchMessages();
   }, []);
 
   const fetchProjects = async () => {
@@ -51,6 +55,15 @@ const Admin = () => {
       setBlogs(response.data);
     } catch (error) {
       console.error('Error fetching blogs:', error);
+    }
+  };
+
+  const fetchMessages = async () => {
+    try {
+      const response = await contactAPI.getAll();
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
     }
   };
 
@@ -197,6 +210,12 @@ const Admin = () => {
             onClick={() => setActiveTab('blog')}
           >
             📝 Blog Posts ({blogs.length})
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'messages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('messages')}
+          >
+            📧 Messages ({messages.length})
           </button>
         </div>
 
@@ -393,6 +412,39 @@ const Admin = () => {
                         <button onClick={() => handleDeleteBlog(blog._id)} className="btn btn-sm btn-danger">
                           Delete
                         </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'messages' && (
+          <div className="admin-section">
+            <div className="admin-list">
+              <h2>Contact Messages</h2>
+              {messages.length === 0 ? (
+                <p className="empty-message">No messages yet.</p>
+              ) : (
+                <div className="admin-list-items">
+                  {messages.map((msg) => (
+                    <div key={msg._id} className="admin-list-item card">
+                      <div className="admin-list-content">
+                        <h3>{msg.name}</h3>
+                        <p className="message-email">
+                          <strong>Email:</strong> {msg.email}
+                        </p>
+                        {msg.subject && (
+                          <p className="message-subject">
+                            <strong>Subject:</strong> {msg.subject}
+                          </p>
+                        )}
+                        <p className="message-content">{msg.message}</p>
+                        <p className="blog-meta">
+                          Received: {new Date(msg.createdAt).toLocaleDateString()} at {new Date(msg.createdAt).toLocaleTimeString()}
+                        </p>
                       </div>
                     </div>
                   ))}

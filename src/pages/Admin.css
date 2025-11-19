@@ -253,6 +253,25 @@
   background: #c82333;
 }
 
+/* Messages */
+.message-email,
+.message-subject {
+  font-size: 14px;
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.message-content {
+  padding: var(--spacing-md);
+  background: var(--grey-50);
+  border-left: 3px solid var(--google-blue);
+  border-radius: var(--radius-sm);
+  margin: var(--spacing-md) 0;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .form-row {
