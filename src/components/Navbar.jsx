@@ -33,6 +33,13 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
+          {isAuthenticated && (
+            <li>
+              <Link to="/admin" className="navbar-link">
+                Admin
+              </Link>
+            </li>
+          )}
         </ul>
 
         <div className="navbar-actions">
